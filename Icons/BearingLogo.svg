@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg viewBox="0 0 64 63.999997"
+     height="64"
+     width="64"
+     xml:space="preserve"
+     id="svg4485"
+     version="1.1"
+     sodipodi:docname="BearLogo2.svg"
+     inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+     xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:svg="http://www.w3.org/2000/svg"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <sodipodi:namedview pagecolor="#ffffff"
+                        bordercolor="#666666"
+                        borderopacity="1"
+                        objecttolerance="10"
+                        gridtolerance="10"
+                        guidetolerance="10"
+                        inkscape:pageopacity="0"
+                        inkscape:pageshadow="2"
+                        inkscape:window-width="1842"
+                        inkscape:window-height="1057"
+                        id="namedview449"
+                        showgrid="false"
+                        inkscape:zoom="14.75"
+                        inkscape:cx="31.932203"
+                        inkscape:cy="35.932203"
+                        inkscape:window-x="70"
+                        inkscape:window-y="-8"
+                        inkscape:window-maximized="1"
+                        inkscape:current-layer="svg4485"
+                        inkscape:showpageshadow="2"
+                        inkscape:pagecheckerboard="0"
+                        inkscape:deskcolor="#d1d1d1"/>
+    <metadata id="metadata4491">
+        <rdf:RDF>
+            <cc:Work rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+                <dc:title/>
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
+    <defs id="defs4489">
+        <linearGradient gradientUnits="userSpaceOnUse"
+                        y2="60.289665"
+                        x2="3.7103343"
+                        y1="40.950954"
+                        x1="46.32296"
+                        id="linearGradient7549"
+                        xlink:href="#linearGradient7547"/>
+        <linearGradient id="linearGradient7547">
+            <stop id="stop7543"
+                  offset="0"
+                  style="stop-color:#37c837;stop-opacity:1;"/>
+            <stop id="stop7545"
+                  offset="1"
+                  style="stop-color:#37c837;stop-opacity:0;"/>
+        </linearGradient>
+        <linearGradient gradientUnits="userSpaceOnUse"
+                        y2="43.874249"
+                        x2="-5.5092831"
+                        y1="15.765656"
+                        x1="56.891792"
+                        id="linearGradient7533"
+                        xlink:href="#linearGradient7547"/>
+        <linearGradient gradientUnits="userSpaceOnUse"
+                        y2="32.63081"
+                        x2="-2.9232936"
+                        y1="6.3211684"
+                        x1="39.5769"
+                        id="linearGradient7541"
+                        xlink:href="#linearGradient7547"/>
+    </defs>
+    <path id="path3909"
+          style="vector-effect:non-scaling-stroke;fill:#ffaf00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1;-inkscape-stroke:hairline;opacity:1"
+          d="M 5.5,25.2
+          C 5.5,14.873 17.588,6.5 32.5,6.5
+            47.412,6.5 59.5,14.872 59.5,25.2
+          v 0, 12.5
+          C 59.5,48.028 47.412,56.4 32.5,56.4
+            17.588,56.4 5.5,48.028 5.5,37.7
+          v 0,-12.5
+          M 27.343,31.446
+          a 10.5,7.18 0 0 0 5.157,0.926
+            10.5,7.18 0 0 0 5.157,-0.926
+            10.5,7.18 0 0 0 -5.157,-0.926
+          A 10.5,7.18 0 0 0 27.343,31.446
+          z"
+          sodipodi:nodetypes="csccscc"/>
+    <ellipse style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;opacity:1"
+             id="path1024"
+             cx="32.5"
+             cy="25.2"
+             rx="27"
+             ry="18.7"/>
+    <ellipse style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;opacity:1"
+             id="ellipse2257"
+             cx="32.5"
+             cy="25.2"
+             rx="10.5"
+             ry="7.18"/>
+    <path id="ellipse2259"
+          style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;opacity:1"
+          d="M 59.5 37.7 A 0 0 0 0 1 59.5 37.7 L 59.5 37.7 A 27 18.7 0 0 1 32.5 56.4 A 27 18.7 0 0 1 5.5 37.7 "/>
+    <path id="path2274"
+          style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;opacity:1"
+          d="M 27.343 31.446 A 10.5 7.18 0 0 1 32.5 30.52 A 10.5 7.18 0 0 1 37.660 31.447 "/>
+    <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+          d="M 5.5,25.2 V 37.7"
+          id="path2263"
+          inkscape:connector-type="polyline"
+          inkscape:connector-curvature="0"/>
+    <path style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+          d="M 59.5,25.2 V 37.7"
+          id="path2265"
+          inkscape:connector-type="polyline"
+          inkscape:connector-curvature="0"/>
+    <ellipse style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;opacity:1"
+             id="ellipse2277"
+             cx="32.5"
+             cy="25.2"
+             rx="21.5"
+             ry="14.86"/>
+    <ellipse style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;opacity:1"
+             id="ellipse2279"
+             cx="32.5"
+             cy="25.2"
+             rx="16"
+             ry="11.02"/>
+    <path id="path2289"
+          style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;opacity:1"
+          d="M 11.028 25.948 A 21.5 14.86 0 0 1 32.5 11.84 A 21.5 14.86 0 0 1 53.955 25.738 "/>
+    <path id="ellipse2283"
+          style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;opacity:1"
+          d="M 48.44635 25.798 A 16 11.02 0 0 1 48.5 26.7 L 48.5 26.7 A 16 11.02 0 0 1 32.5 37.72 A 16 11.02 0 0 1 16.5 26.7 A 16 11.02 0 0 1 16.537 25.948 "/>
+</svg>
