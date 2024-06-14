@@ -39,7 +39,8 @@ def MakeBaseAxialBearing(self, fp):
 #    FreeCAD.Console.PrintMessage(fp.sizeCode)
 #    FreeCAD.Console.PrintMessage("\n")
 
-    d1, D2, B, B1, d1inside, D2inside, Ds, dBall, nB, rClip, gap = bearMaker.bearData[fp.type+"_def"][fp.sizeCode]
+#    d1, D2, B, B1, d1inside, D2inside, Ds, dBall, nB, rClip, gap = bearMaker.bearData[fp.type+"_def"][fp.sizeCode]
+    d1, D2, B, B1, d1inside, D2inside, Ds, dBall, nB, rClip = bearMaker.bearData[fp.type+"_def"][fp.sizeCode]
     if hasattr(fp, 'shield') and fp.shield != '-':
         b = B1
     else:
@@ -62,10 +63,11 @@ def MakeBaseAxialBearing(self, fp):
 
     if B1 > 0.0 and hasattr(fp, 'shield') and fp.shield != '-':      # draw shield on upper side
 #        if B1 > 0.0:
-            if gap > 0.0:
-                fm.addPoints((r1ins, b-0.5),
-                             (r1ins+gap, b-0.5))
-            fm.addPoints((r1ins+gap, b-0.2),
+#            if gap > 0.0:
+#                fm.addPoints((r1ins, b-0.5),
+#                             (r1ins+gap, b-0.5))
+#            fm.addPoints((r1ins+gap, b-0.2),
+            fm.addPoints((r1ins, b-0.2),
                          (R2ins-2*rClip, b-0.2),
                          (R2ins-rClip, b-rClip-0.1))
             fm.addArc2(rClip, 0.0, -90)
@@ -85,9 +87,10 @@ def MakeBaseAxialBearing(self, fp):
     if B1 > 0.0 and hasattr(fp, 'shield') and (fp.shield == '2Z' or fp.shield == '2RS'):      # draw shield on lower side
         fm.addPoint(R2ins, 0.1)
         fm.addArc2(0.0, rClip, -90)
-        fm.addPoints((R2ins-2*rClip, 0.2), (r1ins+gap, 0.2))
-        if gap > 0.0:
-            fm.addPoints((r1ins+gap, 0.5),(r1ins, 0.5))
+        fm.addPoints((R2ins-2*rClip, 0.2), (r1ins, 0.2))
+#        fm.addPoints((R2ins-2*rClip, 0.2), (r1ins+gap, 0.2))
+#        if gap > 0.0:
+#            fm.addPoints((r1ins+gap, 0.5),(r1ins, 0.5))
     else:                                                                                      # draw balls on lower side
         fm.addPoint(R2ins, b/2 - hBall - T_CAGE)
         fm.addPoint(r1ins, b/2 - hBall - T_CAGE)

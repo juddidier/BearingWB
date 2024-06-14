@@ -35,15 +35,21 @@ _dataPath = os.path.join(_dir, 'Data')
 
 noneParams = {}
 baseAxialParams = {'shield':'Enumeration'}
+needleRollerThrustParams = {'bottomWasher':'Enumeration','topWasher':'Enumeration'}
 
 bearFamilies = {
     'AxialFamily': {'desc': "axial Bearings",},
-#    'RadialFamily': {'desc': "radial Bearings",},
+    'RadialFamily': {'desc': "radial Bearings",},
+    'RadSphericFamily': {'desc': "radial-spherical Bearingss",},
+    'LinearFamily': {'desc': "linear Bearing",},
 }
 
 bearItemsTable = {
-    "MRxxx": ("MR-type metric small axial bearing", 'AxialFamily', baseAxialParams, 'MakeBaseAxialBearing'),
-    "6xx": ("600-type metric small axial bearing", 'AxialFamily', baseAxialParams, 'MakeBaseAxialBearing'),
+    "MRxxx": ("MR-type metric small axial deep groove ball (1 row) bearing", 'AxialFamily', baseAxialParams, 'MakeBaseAxialBearing'),
+    "6xx": ("600-type metric small axial deep groove ball (1 row) bearing", 'AxialFamily', baseAxialParams, 'MakeBaseAxialBearing'),
+    "AXK": ("AXK metric needle roller thrust-bearing", 'RadialFamily', needleRollerThrustParams, 'MakeNeedleRollerThrustBearing'),
+    "GExxC": ("GE..C metric radial spherical plain-bearing", 'RadSphericFamily', noneParams, 'MakeRadialSphericalPlainBearing'),
+    "LMxUU": ("LM metric round linear bearing", 'LinearFamily', noneParams, 'MakeRoundLinearBearing'),
 }
 
 for item in bearItemsTable:
@@ -59,7 +65,7 @@ for item in bearItemsTable:
 def bearGetAttachableSelections():
     def positionDone(center, radius, doneList, tol=1e-6):
         for itm in doneList:
-            if center.isEqual(itm[0], tol) and math.isclose(radius, itm[1], tol):
+            if center.isEqual(itm[0], tol) and math.isclose(radius, itm[1], abs_tol = tol):
                 return True
         return False
 
@@ -222,6 +228,9 @@ class bearFaceMaker:
 
     def revolveZ(self, profile: Part.Shape) -> Part.Shape:
         return profile.revolve(FreeCAD.Base.Vector(0, 0, 0), FreeCAD.Base.Vector(0, 0, 1), 360)
+
+    def hasShape(self):
+        return (len(self.edges) != 0)
 
 #****************************************************************************
 

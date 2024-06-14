@@ -26,6 +26,7 @@ import FreeCADGui as Gui
 import BearUtils
 from BearUtils import _iconPath
 import BearBase
+import time
 
 class bearModifierCmdList:
     def __init__(self):
@@ -53,25 +54,29 @@ def bearGetModifierCmds():
 
 class bearItemCmd:
     def __init__(self, type, help):
-        self.type = type
-        self.help = help
+        self._type = type
+        self._help = help
 
     def GetResources(self):
-        return {'Pixmap': os.path.join(_iconPath, 'Bear'+self.type+'.svg'),
-                'MenuText': "Add "+ self.help,
-                'ToolTip': self.help}
+        return {'Pixmap': os.path.join(_iconPath, 'Bear'+self._type+'.svg'),
+                'MenuText': "Add "+ self._help,
+                'ToolTip': self._help}
 
     def Activated(self):
 #        FreeCAD.Console.PrintMessage("bearCmd.Activated() ")
+        start = int(time.time() * 1000)
         for selObj in BearUtils.bearGetAttachableSelections():
 #            FreeCAD.Console.PrintMessage(selObj)
 #            FreeCAD.Console.PrintMessage("    ")
-            a = FreeCAD.ActiveDocument.addObject("Part::FeaturePython", "bear" + self.type)
-            BearBase.bearBaseObject(a, self.type, selObj)
-            a.Label = self.type
+            a = FreeCAD.ActiveDocument.addObject("Part::FeaturePython", "bear" + self._type)
+            BearBase.bearBaseObject(a, self._type, selObj)
+            a.Label = self._type
             BearBase.bearViewProvider(a.ViewObject)
 #        FreeCAD.Console.PrintMessage("\n")
+        mid = int(time.time() * 1000)
         FreeCAD.ActiveDocument.recompute()
+        end = int(time.time() * 1000)
+        FreeCAD.Console.PrintMessage("execution: " + str(mid - start) + " - " + str(end - start) + " ms\n")
         return
 
     def IsActive(self):
@@ -87,12 +92,30 @@ class BearFlip:
                 'ToolTip': 'Flip the Bearing so the anchor-point is on the opposite side'}
 
     def IsActive(self):
-        if not FreeCAD.ActiveDocument:
-            return False
-        return True
+        selObjs = self.GetSelection()
+        return len(selObjs) > 0
+#        if not FreeCAD.ActiveDocument:
+#            return False
+#        return True
 
     def Activated(self):
-        FreeCAD.Console.PrintMessage("Flip Bearing\n")
+        selObjs = self.GetSelection()
+        if len(selObjs) == 0:
+            return
+        for selObj in selObjs:
+            selObj.invert = not selObj.invert
+        FreeCAD.ActiveDocument.recompute()
+        return
+#        FreeCAD.Console.PrintMessage("Flip Bearing\n")
+
+    def GetSelection(self):
+        bearObj = []
+        for selObj in Gui.Selection.getSelectionEx():
+            obj = selObj.Object
+            if hasattr(obj, 'Proxy') and isinstance(obj.Proxy, BearBase.bearBaseObject):
+                if obj.baseObject is not None:
+                    bearObj.append(obj)
+        return bearObj
 
 Gui.addCommand("BearFlip", BearFlip())
 bearModifierCmd.append("BearFlip")
@@ -105,12 +128,34 @@ class BearMove:
                 'ToolTip': 'Move Bearing to another position'}
 
     def IsActive(self):
-        if not FreeCAD.ActiveDocument:
-            return False
-        return True
+        selObj = self.GetSelection()
+        if selObj[0] is not None:
+            return True
+        return False
+#        if not FreeCAD.ActiveDocument:
+#            return False
+#        return True
 
     def Activated(self):
-        FreeCAD.Console.PrintMessage("Move Bearing\n")
+        selObj = self.GetSelection()
+        if selObj[0] is None:
+            return
+        selObj[0].baseObject = selObj[1]
+        FreeCAD.ActiveDocument.recompute()
+        return
+#        FreeCAD.Console.PrintMessage("Move Bearing\n")
+
+    def GetSelection(self):
+        bearObj = None
+        edgeObj = None
+        for selObj in Gui.Selection.getSelectionEx():
+            obj = selObj.Object
+            if hasattr(obj, 'Proxy') and isinstance(obj.Proxy, BearBase.bearBaseObject):
+                bearObj = obj
+        aselects = BearUtils.bearGetAttachableSelections()
+        if len(aselects) > 0:
+            edgeObj = aselects[0]
+        return bearObj, edgeObj
 
 Gui.addCommand("BearMove", BearMove())
 bearModifierCmd.append("BearMove")
@@ -123,9 +168,10 @@ class BearSimplify:
                 'ToolTip': 'Convert Bearing to non-paramteric part'}
 
     def IsActive(self):
-        if not FreeCAD.ActiveDocument:
-            return False
-        return True
+        return False
+#        if not FreeCAD.ActiveDocument:
+#            return False
+#        return True
 
     def Activated(self):
         FreeCAD.Console.PrintMessage("Simplify Bearing\n")

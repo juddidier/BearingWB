@@ -23,13 +23,15 @@
 import os
 import FreeCAD
 import BearUtils
+import math
+import DraftVecUtils
 from BearMaker import bearMaker
 from BearUtils import _iconPath
 
 
 class bearBaseObject:
     propertyChange = ''
-    oldType = ''
+    backup = {'type':''}
 
     def __init__(self, obj, type, attachTo):
 #        FreeCAD.Console.PrintMessage("bearBaseObject.__init__\n")
@@ -44,20 +46,21 @@ class bearBaseObject:
 
         #*** add sizes accroding the Bearing type ***
         sizeCodes = bearMaker.getAllSizeCodes(type)
-#        sizeCodes = ["aa","bb","cc"]
         obj.addProperty("App::PropertyEnumeration", 'sizeCode', 'Parameters', 'Bearing Size').sizeCode = sizeCodes
         obj.sizeCode = sizeCodes[0]
 
         #*** add Family-Properties ***
+        self.backup['type'] = type
         self.addFamilyProperties(obj)
-        self.oldType = type
         obj.Proxy = self
 
     def onBeforeChange(self, obj, prop):
-        self.propertyChange += prop +' '
 #        FreeCAD.Console.PrintMessage("onBeforeChange: " + self.propertyChange + "\n")
+        self.propertyChange = prop
+#        FreeCAD.Console.PrintMessage("modified: " + prop + "  old Val: " + str(getattr(obj, prop)) + "\n")
 
     def execute(self, fp):
+#        FreeCAD.Console.PrintMessage("execute\n")
         try:
             shape = fp.baseObject[0].Shape.getElement(fp.baseObject[1][0])
         except:
@@ -71,32 +74,57 @@ class bearBaseObject:
         if 'type' in self.propertyChange or 'sizeCode' in self.propertyChange:
             self.addFamilyProperties(fp)
 
-        fp.Label = fp.sizeCode + self.getFamilyPropSuffix(fp)
-
         self.propertyChange = ''
-        self.oldType = fp.type
+        self.backupProperties(fp)
+#        FreeCAD.Console.PrintMessage("execute(): ")
+#        FreeCAD.Console.PrintMessage(self.backup)
+#        FreeCAD.Console.PrintMessage("\n")
 
-        shape = bearMaker.createBearing(fp)
-        fp.Shape = shape
+        shp = bearMaker.createBearing(fp)
+        fp.Shape = shp
 
+        fp.Label2 = fp.sizeCode + self.getFamilyPropSuffix(fp)
+
+        if shape is not None:
+            bearMoveToObject(fp, shape)
 
     def addFamilyProperties(self, obj):
-        if self.oldType != '':
-            for prop in BearUtils.bearItemsTable[self.oldType][2]:
+        if self.backup['type'] != '':
+            for prop in BearUtils.bearItemsTable[self.backup['type']][2]:
                 obj.removeProperty(prop)
         for prop, propType in BearUtils.bearItemsTable[obj.type][2].items():
             propContent = bearMaker.getParamItems(obj.type, prop, propType, obj.sizeCode)
-            if not hasattr(obj, prop):
-                obj.addProperty("App::Property" + propType, prop, 'Parameters', prop)
-                setattr(obj, prop, propContent)
+            obj.addProperty("App::Property" + propType, prop, 'Parameters', prop)
+            setattr(obj, prop, propContent)
+#            FreeCAD.Console.PrintMessage("addFamProp() prop:" + str(prop) + " - self.backup: " + str(self.backup) + " - propContent: " + str(propContent) + "\n")
+            if prop in self.backup:# and self.backup[prop] in propContent:
+#                FreeCAD.Console.PrintMessage("prop in self.backup\n")
+                if propType == 'Enumeration':
+#                    FreeCAD.Console.PrintMessage("propType is Enum\n")
+                    if self.backup[prop] in propContent:
+#                        FreeCAD.Console.PrintMessage("self.backup[prop] in propContent\n")
+                        setattr(obj, prop, self.backup[prop])
+                else:
+#                    FreeCAD.Console.PrintMessage("propType is NOT Enum\n")
+                    setattr(obj, prop, self.backup[prop])
 
     def getFamilyPropSuffix(Self, obj):
         propContent = ""
         for prop, propType in BearUtils.bearItemsTable[obj.type][2].items():
             suffix = str(getattr(obj, prop))
-            if suffix != "-"
+            if suffix != "-":
                 propContent += " " + suffix
         return propContent
+
+    def backupProperties(self, obj):
+        self.backup.clear()
+        self.backup['type'] = obj.type
+        self.backup['sizeCode'] = obj.sizeCode
+
+        for prop in BearUtils.bearItemsTable[obj.type][2]:
+#            FreeCAD.Console.PrintMessage("backupProperties(): " + str(prop) + "\n")
+            self.backup[prop] = getattr(obj, prop) #bearMaker.getParamItems(obj.type, prop, propType, obj.sizeCode)
+
 
 #****************************************************************************
 
@@ -115,8 +143,8 @@ class bearViewProvider:
     def getDisplayModes(self, obj):
         return []
 
-    def getDefaultDisplayMode(self):
-        return 'Shaded'
+#    def getDefaultDisplayMode(self):
+#        return 'Shaded'
 
     def setDisplayMode(self, mode):
         return mode
@@ -136,4 +164,50 @@ class bearViewProvider:
         return None
 
     def __setstate__(self, state):
-        return None
+        if state is not None:
+            self.Object = FreeCAD.ActiveDocument.getObject(state['ObjectName'])
+#        return None
+
+
+def bearMoveToObject(bearObj, attachToObj):
+    ptn1 = None
+    axis1 = None
+    axis2 = None
+    if hasattr(attachToObj, 'Curve'):
+        if hasattr(attachToObj.Curve, 'Center'):
+            pnt1 = attachToObj.Curve.Center
+            axis1 = attachToObj.Curve.Axis
+    if hasattr(attachToObj, 'Surface'):
+        if hasattr(attachToObj.Surface, 'Axis'):
+            axis1 = attachToObj.Surface.Axis
+
+    if hasattr(attachToObj, 'Point'):
+        pnt1 = attachToObj.Point
+
+    if axis1 is not None:
+        if bearObj.invert:
+            axis1 = FreeCAD.Base.Vector(0, 0, 0) - axis1
+
+        pnt1 = pnt1 + axis1 * bearObj.offset.Value
+        axis2 = FreeCAD.Base.Vector(0.0, 0.0, 1.0)
+        axis2Minus = FreeCAD.Base.Vector(0.0, 0.0, -1.0)
+
+        if axis1 == axis2:
+            normvec = FreeCAD.Base.Vector(1.0, 0.0, 0.0)
+            result = 0.0
+        else:
+            if axis1 == axis2Minus:
+                normvec = FreeCAD.Base.Vector(1.0, 0.0, 0.0)
+                result = math.pi
+            else:
+                normvec = axis1.cross(axis2)
+                normvec.normalize()
+                result = DraftVecUtils.angle(axis1, axis2, normvec)
+
+        normvec.multiply(-math.sin(result / 2))
+        pl = FreeCAD.Placement()
+        pl.Rotation = (normvec.x, normvec.y, normvec.z, math.cos(result / 2))
+
+        bearObj.Placement = FreeCAD.Placement()
+        bearObj.Placement.Rotation = pl.Rotation.multiply(bearObj.Placement.Rotation)
+        bearObj.Placement.move(pnt1)
